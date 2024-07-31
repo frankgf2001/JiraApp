@@ -12,4 +12,7 @@
     <string name="rememberMe">Recordarme</string>
     <string name="forgotPassword">Olvidé mi contraseña</string>
     <string name="logIn">Iniciar sesión</string>
+    <string name="searchInBoards">Buscar en tableros</string>
+    <string name="board">Tablero</string>
+    <string name="boards">Tableros</string>
 </resources>
