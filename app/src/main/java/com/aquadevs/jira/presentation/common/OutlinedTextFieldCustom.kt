@@ -35,9 +35,12 @@ fun OutlinedTextFieldCustom(
     keyBoardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     @DrawableRes trailingIcon: Int? = null,
+    @DrawableRes  leadingIcon: Int? = null,
     trailingIconIV: ImageVector? = null,
+    leadingIconIV: ImageVector? = null,
     sizeIcon:Int = 20,
     onClickTrailingIcon: (() -> Unit)? = null,
+    onClickLeadingIcon: (() -> Unit)? = null,
     onValue: (String) -> Unit
 ) {
     OutlinedTextField(
@@ -74,7 +77,7 @@ fun OutlinedTextFieldCustom(
             disabledBorderColor = validateTheme().secondary,
             focusedPlaceholderColor = validateTheme().primary,
             focusedLeadingIconColor = validateTheme().primary,
-            focusedTrailingIconColor = validateTheme().primary
+            focusedTrailingIconColor = validateTheme().primary,
         ),
         enabled = enabled,
         shape = RoundedCornerShape(cornerRadius),
@@ -101,6 +104,35 @@ fun OutlinedTextFieldCustom(
                     if (trailingIconIV != null ){
                         Icon(
                             imageVector = trailingIconIV,
+                            contentDescription = null,
+                            modifier = Modifier.size(sizeIcon.dp),
+                            tint = validateTheme().primary
+                        )
+                    }
+                }
+            }
+        } else null,
+        leadingIcon = if (leadingIcon != null || leadingIconIV != null) {
+            {
+                IconButton(
+                    onClick = {
+                        onClickLeadingIcon?.let {
+                            it()
+                        }
+                    }
+                ) {
+                    if (leadingIcon != null ){
+                        Icon(
+                            painter = painterResource(id = leadingIcon),
+                            contentDescription = null,
+                            modifier = Modifier.size(sizeIcon.dp),
+                            tint = validateTheme().primary
+                        )
+                    }
+
+                    if (leadingIconIV != null ){
+                        Icon(
+                            imageVector = leadingIconIV,
                             contentDescription = null,
                             modifier = Modifier.size(sizeIcon.dp),
                             tint = validateTheme().primary

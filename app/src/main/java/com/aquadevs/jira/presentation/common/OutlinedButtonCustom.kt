@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -96,6 +97,36 @@ fun ButtonCustom(
             text = textButton,
             color = Color.White,
             fontSize = fontSize
+        )
+    }
+}
+
+@Composable
+fun ButtonImageCustom(
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = validateTheme().primary,
+    enabled: Boolean = true,
+    iconSize:Int = 14,
+    iconColor: Color = validateTheme().primary,
+    @DrawableRes iconDR:Int,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = backgroundColor,
+            contentColor = Color.White,
+            disabledContainerColor = validateTheme().primary.copy(0.7f),
+            disabledContentColor = Color.White.copy(0.7f)
+        )
+    ) {
+        IconCustom(
+            iconSize = iconSize,
+            iconDR = iconDR,
+            iconColor = iconColor,
+            modifier = Modifier.padding(1.dp)
         )
     }
 }
