@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Jira</string>
+    <string name="title_activity_splash_jira">SplashJiraActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="greeting">Saludo</string>
+    <string name="welcome">Te damos la bienvenida</string>
+    <string name="to">a</string>
+    <string name="jiraAtllassian">JIRA Atllassian</string>
+    <string name="helloPleaseLogInContinue">Hola, inicia sesión para continuar</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="rememberMe">Recordarme</string>
+    <string name="forgotPassword">Olvidé mi contraseña</string>
+    <string name="logIn">Iniciar sesión</string>
+</resources>
