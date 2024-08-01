@@ -50,7 +50,7 @@ fun NewProjectScreen(
 }
 
 @Composable
-fun MyFooter(newProjectViewModel: NewProjectViewModel = hiltViewModel()) {
+private fun MyFooter(newProjectViewModel: NewProjectViewModel = hiltViewModel()) {
     ButtonCustom(
         textButton = stringResource(id = R.string.createProject),
         modifierText = Modifier.padding(vertical = 5.dp),
@@ -62,7 +62,7 @@ fun MyFooter(newProjectViewModel: NewProjectViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun MyBody(newProjectViewModel: NewProjectViewModel = hiltViewModel()) {
+private fun MyBody(newProjectViewModel: NewProjectViewModel = hiltViewModel()) {
     Column(modifier = Modifier.fillMaxWidth()) {
         OutlinedTextFieldCustom(
             value = "",
@@ -88,6 +88,7 @@ fun MyBody(newProjectViewModel: NewProjectViewModel = hiltViewModel()) {
         ) {
 
         }
+
         OutlinedTextFieldCustom(
             value = "",
             label = stringResource(id = R.string.startDate),

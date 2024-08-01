@@ -67,7 +67,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(10.dp)
         ) {
-            MyHeader()
+            MyHeader(navController = navController)
             MyBody(modifier = Modifier.weight(1f))
         }
 
@@ -160,15 +160,18 @@ private fun MyItem(boardDto: BoardDto, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun MyHeader(homeViewModel: HomeViewModel = hiltViewModel()) {
+private fun MyHeader(
+    navController: NavController,
+    homeViewModel: HomeViewModel = hiltViewModel()
+) {
     val personDto by homeViewModel.personDto.observeAsState(initial = PersonDto())
     Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             ImageAsyncCustom(
                 urlPicture = personDto.urlProfile,
-                modifier = Modifier.clip(CircleShape).size(50.dp)
+                modifier = Modifier.clip(CircleShape).size(50.dp).clickable {
+                    navController.navigate(MainRoute.NavProfileScreen.route)
+                }
             )
             Column(
                 modifier = Modifier
@@ -220,7 +223,7 @@ private fun MyHeader(homeViewModel: HomeViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun AdvancedSearch(
+private fun AdvancedSearch(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -244,7 +247,7 @@ fun AdvancedSearch(
 }
 
 @Composable
-fun MyFooterDialog(homeViewModel: HomeViewModel) {
+private fun MyFooterDialog(homeViewModel: HomeViewModel) {
     Column(modifier = Modifier.fillMaxWidth()) {
         ButtonCustom(
             textButton = stringResource(id = R.string.search),
@@ -265,7 +268,7 @@ fun MyFooterDialog(homeViewModel: HomeViewModel) {
 }
 
 @Composable
-fun MyBodyDialog() {
+private fun MyBodyDialog() {
     Column(modifier = Modifier.fillMaxWidth()) {
         OutlinedTextFieldCustom(
             value = "",
@@ -285,6 +288,7 @@ fun MyBodyDialog() {
         ) {
 
         }
+
         OutlinedTextFieldCustom(
             value = "",
             label = stringResource(id = R.string.state),
@@ -303,6 +307,7 @@ fun MyBodyDialog() {
         ) {
 
         }
+
         OutlinedTextFieldCustom(
             value = "",
             label = stringResource(id = R.string.projectIcon),
@@ -312,6 +317,7 @@ fun MyBodyDialog() {
         ) {
 
         }
+
         OutlinedTextFieldCustom(
             value = "",
             label = stringResource(id = R.string.startDate),
@@ -321,6 +327,7 @@ fun MyBodyDialog() {
         ) {
 
         }
+
         OutlinedTextFieldCustom(
             value = "",
             label = stringResource(id = R.string.edingDate),
@@ -334,7 +341,7 @@ fun MyBodyDialog() {
 }
 
 @Composable
-fun MyHeaderDialog(homeViewModel: HomeViewModel) {
+private fun MyHeaderDialog(homeViewModel: HomeViewModel) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically

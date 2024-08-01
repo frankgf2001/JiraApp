@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import com.aquadevs.jira.R
-import com.aquadevs.jira.presentation.features.main.editPhoto.EditPhotoScreen
 import com.aquadevs.jira.ui.validateTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,8 +18,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Box(modifier = Modifier.background(validateTheme().background)) {
-                EditPhotoScreen()
-            //LoginScreen()
+                LoginScreen()
             }
         }
     }

@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.aquadevs.jira.R
+import com.aquadevs.jira.presentation.common.IconButtonCustom
 import com.aquadevs.jira.presentation.common.IconCustom
 import com.aquadevs.jira.presentation.common.ImageAsyncCustom
 import com.aquadevs.jira.presentation.common.TextCustom
@@ -31,7 +32,7 @@ import com.aquadevs.jira.ui.validateTheme
 
 @Composable
 fun EditPhotoScreen(
-    navController: NavController? = null,
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -39,6 +40,14 @@ fun EditPhotoScreen(
             .fillMaxSize()
             .background(Color.Black)
     ) {
+        IconButtonCustom(
+            iconDR = R.drawable.icon_arrow_back,
+            iconColor = validateTheme().primary,
+            iconSize = 26,
+            modifier = Modifier.padding(10.dp).align(Alignment.TopStart)
+        ) {
+            navController.popBackStack()
+        }
         ImageAsyncCustom(
             urlPicture = "https://s3-alpha-sig.figma.com/img/af22/e37f/c59a84890081e9133704fdb55b8401e3?Expires=1723420800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=lKGdBelAq2GU04i92kHOk1KyeohtpJi1ldk1oOzFvgorevwMdAc5f8H1nT5ssOpg9~~O4t205HKumg10Pb-Ed4PNdZdaH7r-HjBt3P7e7QSra3yl21XsbrInoWHLZ5AAjv2UtUioOavYIW3AMJdhlSZZD39Qcg8bG2s4McOh-Z0462jcvlvoB0~4Exm3yj6rZydJgOW1N0hh0rC1v-BrtQurdbvejFw2i-AsrvsfPsjKkZige2Z~g7c~Ixf6IpzTIJ4vDkrenFeeN58JWe3s4X4fsCt-TujINy-k5p-W-6Ze5ZSD7of0gnnRX96VoYQ24ho38upzfAEVvMtDcSKWMg__",
             modifier = Modifier
