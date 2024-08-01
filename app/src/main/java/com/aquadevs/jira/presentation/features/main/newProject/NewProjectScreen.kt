@@ -126,7 +126,7 @@ private fun MyBody(newProjectViewModel: NewProjectViewModel = hiltViewModel()) {
                 .padding(top = 5.dp),
             trailingIcon = R.drawable.icon_calendar_today
         ) {
-            newProjectViewModel.validateNewProject(startDate = it)
+            newProjectViewModel.validateNewProject(endDate = it)
         }
 
         Row(
