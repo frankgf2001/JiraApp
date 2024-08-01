@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,14 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,25 +35,22 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.aquadevs.jira.R
+import com.aquadevs.jira.core.function.General.DialogProgress
 import com.aquadevs.jira.presentation.common.ButtonCustom
-import com.aquadevs.jira.presentation.common.ButtonImageCustom
 import com.aquadevs.jira.presentation.common.DialogCustom
 import com.aquadevs.jira.presentation.common.IconButtonCustom
-import com.aquadevs.jira.presentation.common.IconCustom
 import com.aquadevs.jira.presentation.common.ImageAsyncCustom
 import com.aquadevs.jira.presentation.common.OutlinedButtonCustom
 import com.aquadevs.jira.presentation.common.OutlinedTextFieldCustom
 import com.aquadevs.jira.presentation.common.TextCustom
+import com.aquadevs.jira.presentation.common.ToastCustom
 import com.aquadevs.jira.presentation.model.BoardDto
 import com.aquadevs.jira.presentation.model.PersonDto
 import com.aquadevs.jira.presentation.navigation.MainRoute
 import com.aquadevs.jira.ui.validateTheme
 
 @Composable
-fun HomeScreen(
-    modifier: Modifier = Modifier,
-    navController: NavController
-) {
+fun HomeScreen(navController: NavController) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -86,7 +78,7 @@ fun HomeScreen(
                 modifier = Modifier.size(25.dp)
             )
         }
-        AdvancedSearch()
+        MyDialogCustom()
     }
 }
 
@@ -165,13 +157,17 @@ private fun MyHeader(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val personDto by homeViewModel.personDto.observeAsState(initial = PersonDto())
+    val search by homeViewModel.search.observeAsState(initial = "")
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             ImageAsyncCustom(
                 urlPicture = personDto.urlProfile,
-                modifier = Modifier.clip(CircleShape).size(50.dp).clickable {
-                    navController.navigate(MainRoute.NavProfileScreen.route)
-                }
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(50.dp)
+                    .clickable {
+                        navController.navigate(MainRoute.NavProfileScreen.route)
+                    }
             )
             Column(
                 modifier = Modifier
@@ -204,7 +200,7 @@ private fun MyHeader(
         }
 
         OutlinedTextFieldCustom(
-            value = "",
+            value = search,
             label = stringResource(id = R.string.searchInBoards),
             maxLine = 1,
             trailingIcon = R.drawable.icon_tune,
@@ -217,44 +213,41 @@ private fun MyHeader(
                 homeViewModel.detectAction(idAction = 1)
             }
         ) {
-
+            homeViewModel.searchBoard(it)
         }
     }
 }
 
 @Composable
-private fun AdvancedSearch(
-    modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = hiltViewModel()
-) {
-    val isShow by homeViewModel.showAdvancedSearchDialog.observeAsState(initial = false)
-
-    if (isShow){
-        DialogCustom(
-            modifier = modifier.fillMaxWidth(),
-            cornerRadius = 10,
-            onDismissRequest = { /*TODO*/ }
+private fun AdvancedSearch(homeViewModel: HomeViewModel = hiltViewModel()) {
+    DialogCustom(
+        modifier = Modifier.fillMaxWidth(),
+        cornerRadius = 10,
+        onDismissRequest = { /*TODO*/ }
+    ) {
+        Column(
+            modifier = Modifier.padding(15.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(15.dp)
-            ) {
-                MyHeaderDialog(homeViewModel)
-                MyBodyDialog()
-                MyFooterDialog(homeViewModel)
-            }
+            MyHeaderDialog(homeViewModel)
+            MyBodyDialog(homeViewModel)
+            MyFooterDialog(homeViewModel)
         }
     }
 }
 
 @Composable
 private fun MyFooterDialog(homeViewModel: HomeViewModel) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
         ButtonCustom(
             textButton = stringResource(id = R.string.search),
             modifier = Modifier.fillMaxWidth(),
             modifierText = Modifier.padding(vertical = 5.dp)
         ) {
-            
+            homeViewModel.detectAction(idAction = 1, bool = false)
         }
         Spacer(modifier = Modifier.height(5.dp))
         OutlinedButtonCustom(
@@ -262,80 +255,90 @@ private fun MyFooterDialog(homeViewModel: HomeViewModel) {
             modifier = Modifier.fillMaxWidth(),
             modifierText = Modifier.padding(vertical = 5.dp)
         ) {
-
+            homeViewModel.cleanDialog()
         }
     }
 }
 
 @Composable
-private fun MyBodyDialog() {
+private fun MyBodyDialog(homeViewModel: HomeViewModel) {
+    val projectCode by homeViewModel.projectCode.observeAsState(initial = "")
+    val name by homeViewModel.name.observeAsState(initial = "")
+    val state by homeViewModel.state.observeAsState(initial = "")
+    val category by homeViewModel.category.observeAsState(initial = "")
+    val projectIcon by homeViewModel.projectIcon.observeAsState(initial = "")
+    val startDate by homeViewModel.startDate.observeAsState(initial = "")
+    val endingDate by homeViewModel.endingDate.observeAsState(initial = "")
+
     Column(modifier = Modifier.fillMaxWidth()) {
         OutlinedTextFieldCustom(
-            value = "",
+            value = projectCode,
             label = stringResource(id = R.string.projectCode),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 5.dp)
         ) {
-
+            homeViewModel.validateHome(projectCode = it)
         }
+
         OutlinedTextFieldCustom(
-            value = "",
+            value = name,
             label = stringResource(id = R.string.name),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 5.dp)
         ) {
-
+            homeViewModel.validateHome(name = it)
         }
 
         OutlinedTextFieldCustom(
-            value = "",
+            value = state,
             label = stringResource(id = R.string.state),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 5.dp)
         ) {
-
+            homeViewModel.validateHome(state = it)
         }
+
         OutlinedTextFieldCustom(
-            value = "",
+            value = category,
             label = stringResource(id = R.string.category),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 5.dp)
         ) {
-
+            homeViewModel.validateHome(category = it)
         }
 
         OutlinedTextFieldCustom(
-            value = "",
+            value = projectIcon,
             label = stringResource(id = R.string.projectIcon),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 5.dp)
         ) {
-
+            homeViewModel.validateHome(projectIcon = it)
         }
 
         OutlinedTextFieldCustom(
-            value = "",
+            value = startDate,
             label = stringResource(id = R.string.startDate),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 5.dp)
         ) {
-
+            homeViewModel.validateHome(startDate = it)
         }
 
         OutlinedTextFieldCustom(
-            value = "",
+            value = endingDate,
             label = stringResource(id = R.string.edingDate),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 5.dp)
         ) {
-
+            homeViewModel.validateHome(endingDate = it)
         }
     }
 }
@@ -358,5 +361,18 @@ private fun MyHeaderDialog(homeViewModel: HomeViewModel) {
         ) {
             homeViewModel.detectAction(idAction = 1, bool = false)
         }
+    }
+}
+
+@Composable
+private fun MyDialogCustom(homeViewModel: HomeViewModel = hiltViewModel()) {
+    val isShow by homeViewModel.showAdvancedSearchDialog.observeAsState(initial = false)
+    val messageToast by homeViewModel.messageToast.observeAsState(initial = 0)
+    val isLoading by homeViewModel.isLoading.observeAsState(initial = false)
+    if (isLoading) DialogProgress()
+    if (isShow) AdvancedSearch()
+    if (messageToast != 0) {
+        ToastCustom(text = stringResource(id = messageToast))
+        homeViewModel.detectAction(idAction = 0)
     }
 }
