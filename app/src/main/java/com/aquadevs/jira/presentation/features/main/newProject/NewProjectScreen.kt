@@ -15,12 +15,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -45,70 +47,92 @@ fun NewProjectScreen(
     ) {
         MyHeader(navController = navController)
         MyBody()
-        MyFooter()
+        MyFooter(navController = navController)
     }
 }
 
 @Composable
-private fun MyFooter(newProjectViewModel: NewProjectViewModel = hiltViewModel()) {
+private fun MyFooter(
+    navController: NavController,
+    newProjectViewModel: NewProjectViewModel = hiltViewModel()
+) {
     ButtonCustom(
         textButton = stringResource(id = R.string.createProject),
         modifierText = Modifier.padding(vertical = 5.dp),
-        modifier = Modifier.fillMaxWidth().padding(top = 5.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 5.dp),
         fontSize = 16
     ) {
-
+        navController.popBackStack()
     }
 }
 
 @Composable
 private fun MyBody(newProjectViewModel: NewProjectViewModel = hiltViewModel()) {
+    val projectName by newProjectViewModel.projectName.observeAsState(initial = "")
+    val description by newProjectViewModel.description.observeAsState(initial = "")
+    val projectState by newProjectViewModel.projectState.observeAsState(initial = "")
+    val startDate by newProjectViewModel.startDate.observeAsState(initial = "")
+    val endDate by newProjectViewModel.endDate.observeAsState(initial = "")
+    val isSearch by newProjectViewModel.isSearch.observeAsState(initial = false)
+
     Column(modifier = Modifier.fillMaxWidth()) {
         OutlinedTextFieldCustom(
-            value = "",
+            value = projectName,
             label = stringResource(id = R.string.projectName),
             modifier = Modifier.fillMaxWidth()
         ) {
-
+            newProjectViewModel.validateNewProject(projectName = it)
         }
 
         OutlinedTextFieldCustom(
-            value = "",
+            value = description,
             label = stringResource(id = R.string.description),
-            modifier = Modifier.fillMaxWidth().padding(top = 5.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
         ) {
-
+            newProjectViewModel.validateNewProject(description = it)
         }
 
         OutlinedTextFieldCustom(
-            value = "",
+            value = projectState,
             label = stringResource(id = R.string.projectState),
-            modifier = Modifier.fillMaxWidth().padding(top = 5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp),
             trailingIcon = R.drawable.icon_chevron_right
         ) {
-
+            newProjectViewModel.validateNewProject(projectState = it)
         }
 
         OutlinedTextFieldCustom(
-            value = "",
+            value = startDate,
             label = stringResource(id = R.string.startDate),
-            modifier = Modifier.fillMaxWidth().padding(top = 5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp),
             trailingIcon = R.drawable.icon_calendar_today
         ) {
-
+            newProjectViewModel.validateNewProject(startDate = it)
         }
 
         OutlinedTextFieldCustom(
-            value = "",
+            value = endDate,
             label = stringResource(id = R.string.endDate),
-            modifier = Modifier.fillMaxWidth().padding(top = 5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp),
             trailingIcon = R.drawable.icon_calendar_today
         ) {
-
+            newProjectViewModel.validateNewProject(startDate = it)
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp, vertical = 10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 5.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextCustom(
@@ -116,7 +140,16 @@ private fun MyBody(newProjectViewModel: NewProjectViewModel = hiltViewModel()) {
                 color = validateTheme().secondary,
                 modifier = Modifier.weight(1f)
             )
-            Switch(checked = false, onCheckedChange = {})
+            Switch(
+                checked = isSearch,
+                onCheckedChange = {
+                    newProjectViewModel.validateNewProject(isSearch = it)
+                },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = validateTheme().primary
+                )
+            )
         }
     }
 }

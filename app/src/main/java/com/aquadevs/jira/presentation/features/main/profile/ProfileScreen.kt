@@ -13,18 +13,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.aquadevs.jira.R
+import com.aquadevs.jira.core.function.General
 import com.aquadevs.jira.presentation.common.ButtonCustom
 import com.aquadevs.jira.presentation.common.IconButtonCustom
 import com.aquadevs.jira.presentation.common.ImageAsyncCustom
 import com.aquadevs.jira.presentation.common.OutlinedTextFieldCustom
 import com.aquadevs.jira.presentation.common.TextCustom
+import com.aquadevs.jira.presentation.model.PersonDto
 import com.aquadevs.jira.presentation.navigation.MainRoute
 import com.aquadevs.jira.ui.validateTheme
 
@@ -40,84 +45,90 @@ fun ProfileScreen(
     ) {
         MyHeader(navController = navController)
         MyBody()
-        MyFooter()
+        MyFooter(navController = navController)
+        MyDialogCustom()
     }
 }
 
 @Composable
-fun MyFooter() {
+fun MyFooter(navController: NavController) {
     ButtonCustom(
         textButton = stringResource(id = R.string.save),
         modifierText = Modifier.padding(vertical = 6.dp),
-        modifier = Modifier.padding(top = 15.dp).fillMaxWidth(),
+        modifier = Modifier
+            .padding(top = 15.dp)
+            .fillMaxWidth(),
         fontSize = 16
     ) {
-
+        navController.popBackStack()
     }
 }
 
 @Composable
-private fun MyBody() {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+private fun MyBody(profileViewModel: ProfileViewModel = hiltViewModel()) {
+    val personDto by profileViewModel.personDto.observeAsState(initial = PersonDto())
 
+    Column(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextFieldCustom(
+            value = personDto.userName,
+            label = stringResource(id = R.string.names),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+            profileViewModel.validateProfile(names = it)
+        }
+
+        OutlinedTextFieldCustom(
+            value = personDto.userSurname,
+            label = stringResource(id = R.string.surnames),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+            profileViewModel.validateProfile(surnames = it)
+        }
+
+        OutlinedTextFieldCustom(
+            value = personDto.companyName,
+            label = stringResource(id = R.string.companyName),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+            profileViewModel.validateProfile(companyName = it)
+        }
+
+        OutlinedTextFieldCustom(
+            value = personDto.positionCompany,
+            label = stringResource(id = R.string.positionCompany),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+            profileViewModel.validateProfile(positionCompany = it)
+        }
+
+        OutlinedTextFieldCustom(
+            value = personDto.cellPhone,
+            label = stringResource(id = R.string.cellPhone),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+            profileViewModel.validateProfile(cellPhone = it)
+        }
+
+        OutlinedTextFieldCustom(
+            value = personDto.email,
+            label = stringResource(id = R.string.email),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+            profileViewModel.validateProfile(email = it)
+        }
     }
-    OutlinedTextFieldCustom(
-        value = "",
-        label = stringResource(id = R.string.names),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 5.dp)
-    ) {
-
-    }
-    OutlinedTextFieldCustom(
-        value = "",
-        label = stringResource(id = R.string.surnames),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 5.dp)
-    ) {
-
-    }
-    OutlinedTextFieldCustom(
-        value = "",
-        label = stringResource(id = R.string.companyName),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 5.dp)
-    ) {
-
-    }
-    OutlinedTextFieldCustom(
-        value = "",
-        label = stringResource(id = R.string.positionCompany),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 5.dp)
-    ) {
-
-    }
-    OutlinedTextFieldCustom(
-        value = "",
-        label = stringResource(id = R.string.cellPhone),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 5.dp)
-    ) {
-
-    }
-    OutlinedTextFieldCustom(
-        value = "",
-        label = stringResource(id = R.string.email),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 5.dp)
-    ) {
-
-    }
-
 }
 
 @Composable
@@ -171,4 +182,9 @@ private fun MyProfilePicture(navController: NavController) {
             navController.navigate(MainRoute.NavEditPhotoScreen.route)
         }
     }
+}
+@Composable
+private fun MyDialogCustom(profileViewModel: ProfileViewModel = hiltViewModel()) {
+    val isLoading by profileViewModel.isLoading.observeAsState(initial = false)
+    if (isLoading) General.DialogProgress()
 }
