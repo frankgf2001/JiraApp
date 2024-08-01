@@ -37,4 +37,10 @@
     <string name="takePhoto">Tomar foto</string>
     <string name="galery">Galería</string>
     <string name="delete">Eliminar</string>
+    <string name="names">Nombres</string>
+    <string name="surnames">Apellidos</string>
+    <string name="companyName">Nombre de la empresa</string>
+    <string name="positionCompany">Cargo en la empresa</string>
+    <string name="cellPhone">Celular</string>
+    <string name="save">Guardar</string>
 </resources>
