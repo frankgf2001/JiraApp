@@ -15,4 +15,26 @@
     <string name="searchInBoards">Buscar en tableros</string>
     <string name="board">Tablero</string>
     <string name="boards">Tableros</string>
+    <string name="newProject">Nuevo proyecto</string>
+    <string name="projectIcon">Icono del proyecto</string>
+    <string name="changeRandomIcon">Cambiar icono aleatorio</string>
+    <string name="projectName">Nombre del proyecto</string>
+    <string name="description">Descripción</string>
+    <string name="projectState">Estado del proyecto</string>
+    <string name="startDate">Fecha de inicio</string>
+    <string name="endDate">Fecha fin</string>
+    <string name="shareWithOtherMembers">Compartir con otros miembros</string>
+    <string name="createProject">Crear proyecto</string>
+    <string name="advanceSearch">Búsqueda avanzada</string>
+    <string name="projectCode">Código del proyecto</string>
+    <string name="name">Nombre</string>
+    <string name="state">Estado</string>
+    <string name="category">Categoria</string>
+    <string name="edingDate">Fecha de finalización</string>
+    <string name="search">Buscar</string>
+    <string name="clean">Limpiar</string>
+    <string name="editor">Editor</string>
+    <string name="takePhoto">Tomar foto</string>
+    <string name="galery">Galería</string>
+    <string name="delete">Eliminar</string>
 </resources>

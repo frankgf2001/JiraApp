@@ -22,19 +22,19 @@ fun NavMainMenu(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize().background(validateTheme().background)
     ) {
         composable(route = MainRoute.NavHomeScreen.route) {
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
 
         composable(route = MainRoute.NavNewProjectScreen.route) {
-            NewProjectScreen()
+            NewProjectScreen(navController = navController)
         }
 
         composable(route = MainRoute.NavProfileScreen.route) {
-            ProfileScreen()
+            ProfileScreen(navController = navController)
         }
 
         composable(route = MainRoute.NavEditPhotoScreen.route) {
-            EditPhotoScreen()
+            EditPhotoScreen(navController = navController)
         }
     }
 }

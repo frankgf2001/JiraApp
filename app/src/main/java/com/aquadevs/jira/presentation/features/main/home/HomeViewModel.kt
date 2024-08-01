@@ -26,6 +26,9 @@ class HomeViewModel @Inject constructor(
     private val _listBoard = mutableStateListOf<BoardDto>()
     val listBoard: List<BoardDto> = _listBoard
 
+    private val _showAdvancedSearchDialog = MutableLiveData<Boolean>()
+    val showAdvancedSearchDialog: LiveData<Boolean> = _showAdvancedSearchDialog
+
     init {
         getInfoUser()
         getListBoard()
@@ -43,6 +46,10 @@ class HomeViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun detectAction(idAction: Int, bool: Boolean = true) {
+        if (idAction == 1) _showAdvancedSearchDialog.value = bool
     }
 
     private fun getListBoard() {
