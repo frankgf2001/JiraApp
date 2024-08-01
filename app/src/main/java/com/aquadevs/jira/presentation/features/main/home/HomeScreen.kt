@@ -38,20 +38,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.aquadevs.jira.R
 import com.aquadevs.jira.presentation.common.ButtonCustom
 import com.aquadevs.jira.presentation.common.ButtonImageCustom
+import com.aquadevs.jira.presentation.common.DialogCustom
 import com.aquadevs.jira.presentation.common.IconButtonCustom
 import com.aquadevs.jira.presentation.common.IconCustom
 import com.aquadevs.jira.presentation.common.ImageAsyncCustom
+import com.aquadevs.jira.presentation.common.OutlinedButtonCustom
 import com.aquadevs.jira.presentation.common.OutlinedTextFieldCustom
 import com.aquadevs.jira.presentation.common.TextCustom
 import com.aquadevs.jira.presentation.model.BoardDto
 import com.aquadevs.jira.presentation.model.PersonDto
+import com.aquadevs.jira.presentation.navigation.MainRoute
 import com.aquadevs.jira.ui.validateTheme
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController
+) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -66,10 +73,12 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
         FloatingActionButton(
             onClick = {
-
+                navController.navigate(MainRoute.NavNewProjectScreen.route)
             },
             containerColor = validateTheme().primary,
-            modifier = Modifier.align(Alignment.BottomEnd).padding(10.dp)
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(10.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.icon_round_add),
@@ -77,11 +86,12 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.size(25.dp)
             )
         }
+        AdvancedSearch()
     }
 }
 
 @Composable
-fun MyBody(
+private fun MyBody(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -96,7 +106,6 @@ fun MyBody(
             columns = StaggeredGridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalItemSpacing = 16.dp,
-            //contentPadding = PaddingValues(16.dp),
             state = state,
             modifier = Modifier.background(Color.Transparent)
         ) {
@@ -108,7 +117,7 @@ fun MyBody(
 }
 
 @Composable
-fun MyItem(boardDto: BoardDto, modifier: Modifier = Modifier) {
+private fun MyItem(boardDto: BoardDto, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -125,15 +134,17 @@ fun MyItem(boardDto: BoardDto, modifier: Modifier = Modifier) {
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
-            Box(modifier = Modifier
-                .clip(CircleShape)
-                .background(Color(0XFFF4F9FF))) {
+            Box(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .background(Color(0XFFF4F9FF))
+            ) {
                 Image(
                     painter = painterResource(id = boardDto.icon),
                     contentDescription = null,
                     modifier = Modifier
                         .size(45.dp)
-                        .padding(5.dp)
+                        .padding(10.dp)
                 )
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -157,7 +168,7 @@ private fun MyHeader(homeViewModel: HomeViewModel = hiltViewModel()) {
         ) {
             ImageAsyncCustom(
                 urlPicture = personDto.urlProfile,
-                size = 50
+                modifier = Modifier.clip(CircleShape).size(50.dp)
             )
             Column(
                 modifier = Modifier
@@ -182,7 +193,8 @@ private fun MyHeader(homeViewModel: HomeViewModel = hiltViewModel()) {
                     .border(1.dp, color = validateTheme().secondary.copy(0.3f), CircleShape),
                 iconDR = R.drawable.icon_notification,
                 iconSize = 50,
-                iconColor = validateTheme().primary
+                iconColor = validateTheme().primary,
+                modifierIcon = Modifier.padding(15.dp)
             ) {
 
             }
@@ -198,8 +210,146 @@ private fun MyHeader(homeViewModel: HomeViewModel = hiltViewModel()) {
                 .fillMaxWidth()
                 .padding(vertical = 20.dp),
             sizeIcon = 25,
+            onClickTrailingIcon = {
+                homeViewModel.detectAction(idAction = 1)
+            }
         ) {
 
+        }
+    }
+}
+
+@Composable
+fun AdvancedSearch(
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = hiltViewModel()
+) {
+    val isShow by homeViewModel.showAdvancedSearchDialog.observeAsState(initial = false)
+
+    if (isShow){
+        DialogCustom(
+            modifier = modifier.fillMaxWidth(),
+            cornerRadius = 10,
+            onDismissRequest = { /*TODO*/ }
+        ) {
+            Column(
+                modifier = Modifier.padding(15.dp)
+            ) {
+                MyHeaderDialog(homeViewModel)
+                MyBodyDialog()
+                MyFooterDialog(homeViewModel)
+            }
+        }
+    }
+}
+
+@Composable
+fun MyFooterDialog(homeViewModel: HomeViewModel) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        ButtonCustom(
+            textButton = stringResource(id = R.string.search),
+            modifier = Modifier.fillMaxWidth(),
+            modifierText = Modifier.padding(vertical = 5.dp)
+        ) {
+            
+        }
+        Spacer(modifier = Modifier.height(5.dp))
+        OutlinedButtonCustom(
+            textButton = stringResource(id = R.string.clean),
+            modifier = Modifier.fillMaxWidth(),
+            modifierText = Modifier.padding(vertical = 5.dp)
+        ) {
+
+        }
+    }
+}
+
+@Composable
+fun MyBodyDialog() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextFieldCustom(
+            value = "",
+            label = stringResource(id = R.string.projectCode),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+
+        }
+        OutlinedTextFieldCustom(
+            value = "",
+            label = stringResource(id = R.string.name),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+
+        }
+        OutlinedTextFieldCustom(
+            value = "",
+            label = stringResource(id = R.string.state),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+
+        }
+        OutlinedTextFieldCustom(
+            value = "",
+            label = stringResource(id = R.string.category),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+
+        }
+        OutlinedTextFieldCustom(
+            value = "",
+            label = stringResource(id = R.string.projectIcon),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+
+        }
+        OutlinedTextFieldCustom(
+            value = "",
+            label = stringResource(id = R.string.startDate),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+
+        }
+        OutlinedTextFieldCustom(
+            value = "",
+            label = stringResource(id = R.string.edingDate),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 5.dp)
+        ) {
+
+        }
+    }
+}
+
+@Composable
+fun MyHeaderDialog(homeViewModel: HomeViewModel) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextCustom(
+            text = stringResource(id = R.string.advanceSearch),
+            modifier = Modifier.weight(1f),
+            fontSize = 18
+        )
+        IconButtonCustom(
+            iconDR = R.drawable.icon_close,
+            iconSize = 22,
+            modifier = Modifier.padding(end = 4.dp)
+        ) {
+            homeViewModel.detectAction(idAction = 1, bool = false)
         }
     }
 }

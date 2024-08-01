@@ -18,16 +18,13 @@ import com.aquadevs.jira.R
 @Composable
 fun ImageAsyncCustom(
     urlPicture: String,
-    shape: Shape = CircleShape,
-    size: Int = 100
+    modifier: Modifier = Modifier,
 ) {
     if (urlPicture.isEmpty()) {
         Image(
             painter = painterResource(id = R.drawable.no_profile_picture),
             contentDescription = null,
-            modifier = Modifier
-                .clip(shape)
-                .size(size.dp),
+            modifier = modifier,
             contentScale = ContentScale.Crop
         )
     } else {
@@ -38,9 +35,7 @@ fun ImageAsyncCustom(
                 .build(),
             contentScale = ContentScale.Crop,
             contentDescription = null,
-            modifier = Modifier
-                .clip(shape)
-                .size(size.dp)
+            modifier = modifier
         )
     }
 }

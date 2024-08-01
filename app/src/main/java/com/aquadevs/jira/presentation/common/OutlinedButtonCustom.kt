@@ -26,6 +26,7 @@ import com.aquadevs.jira.ui.validateTheme
 @Composable
 fun OutlinedButtonCustom(
     modifier: Modifier = Modifier,
+    modifierText: Modifier = Modifier,
     @DrawableRes imageRes:Int? = null,
     textAlign: TextAlign = TextAlign.Start,
     isIcon : Boolean = false,
@@ -67,7 +68,8 @@ fun OutlinedButtonCustom(
                 text = textButton,
                 fontSize = textSize.sp,
                 color = textColor,
-                textAlign = textAlign
+                textAlign = textAlign,
+                modifier = modifierText
             )
         }
     }
@@ -76,6 +78,7 @@ fun OutlinedButtonCustom(
 @Composable
 fun ButtonCustom(
     modifier: Modifier = Modifier,
+    modifierText: Modifier = Modifier,
     textButton: String,
     backgroundColor: Color = validateTheme().primary,
     enabled: Boolean = true,
@@ -96,7 +99,8 @@ fun ButtonCustom(
         TextCustom(
             text = textButton,
             color = Color.White,
-            fontSize = fontSize
+            fontSize = fontSize,
+            modifier = modifierText
         )
     }
 }

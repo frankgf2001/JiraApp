@@ -19,6 +19,7 @@ import com.aquadevs.jira.ui.validateTheme
 @Composable
 fun IconButtonCustom(
     modifier: Modifier = Modifier,
+    modifierIcon: Modifier = Modifier,
     icon: ImageVector? = null,
     @DrawableRes iconDR: Int? = null,
     iconColor: Color = validateTheme().onPrimary,
@@ -35,9 +36,7 @@ fun IconButtonCustom(
                 imageVector = icon,
                 contentDescription = null,
                 tint = iconColor,
-                modifier = Modifier
-                    .size(iconSize.dp)
-                    .padding(10.dp)
+                modifier = Modifier.size(iconSize.dp)
             )
         }
 
@@ -46,9 +45,7 @@ fun IconButtonCustom(
                 painter = painterResource(id = iconDR),
                 contentDescription = null,
                 tint = iconColor,
-                modifier = Modifier
-                    .size(iconSize.dp)
-                    .padding(15.dp)
+                modifier = modifierIcon.size(iconSize.dp)
             )
         }
 
