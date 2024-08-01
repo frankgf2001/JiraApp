@@ -43,4 +43,6 @@
     <string name="positionCompany">Cargo en la empresa</string>
     <string name="cellPhone">Celular</string>
     <string name="save">Guardar</string>
+    <string name="incorrectCredentials">Credenciales incorrectas</string>
+    <string name="anErrorOcurred">Ocurrió un error</string>
 </resources>

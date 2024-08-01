@@ -3,7 +3,7 @@ package com.aquadevs.jira.presentation.features.splash
 import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aquadevs.jira.core.function.Composable.changeActivity
+import com.aquadevs.jira.core.function.General.changeActivity
 import com.aquadevs.jira.presentation.features.login.LoginActivity
 import com.aquadevs.jira.presentation.features.main.MainActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
